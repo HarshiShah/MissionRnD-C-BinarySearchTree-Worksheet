@@ -28,10 +28,33 @@ struct node{
 	int data;
 	struct node *right;
 };
-
+void Rows_BST(int* arr, int arr_index, struct node** buffer, int buff_index);
 
 
 int* BSTRighttoLeftRows(struct node* root)
 {
-    return NULL;
+	if (root == NULL)
+		return NULL;
+	int* arr = (int*)malloc(sizeof(int)* 10);
+	struct node** buffer = (struct node**)malloc(sizeof(struct node*) * 10);
+	buffer[0] = root;
+	Rows_BST(arr, 0, buffer, 1);
+	return arr;
+}
+
+
+
+void Rows_BST(int* arr, int arr_index, struct node** buffer, int buff_index){
+	struct node* root = buffer[arr_index];
+	arr[arr_index++] = root->data;
+	if (root->right != NULL){
+		buffer[buff_index++] = root->right;
+	}
+	if (root->left != NULL){
+		buffer[buff_index++] = root->left;
+	}
+	if (root->right == NULL &&root->left == NULL && arr_index == buff_index)
+		return;
+	Rows_BST(arr, arr_index, buffer, buff_index);
+	return;
 }

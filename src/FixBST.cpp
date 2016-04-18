@@ -32,6 +32,43 @@ struct node{
 	struct node *right;
 };
 
-void fix_bst(struct node *root){
+void swap_nodes(struct node *a, struct node*b);
+void inorder_check(struct node* root, struct node** swaplist,int* index);
+void inorder_check(struct node* root, struct node** swaplist,int* index){
+	if (*index == 2 || root == NULL)
+		return;
+	if (root->left != NULL && root->data < root->left->data)
+		swaplist[(*index)++] = root->left;
+	if (root->right != NULL && root->data > root->right->data && *index != 2)
+		swaplist[(*index)++] = root->right;
+	inorder_check(root->left, swaplist, index);
+	inorder_check(root->right, swaplist, index);
+	return;
+}
 
+void swap_nodes(struct node *a, struct node*b){
+	int temp = a->data;
+	a->data = b->data;
+	b->data = temp;
+}
+
+
+void fix_bst(struct node* root){
+	if (root != NULL){
+		struct node** swaplist = (struct node**)malloc(sizeof(struct node*) * 2);
+		swaplist[0] = NULL;
+		swaplist[1] = NULL;
+		int index = 0;
+		inorder_check(root, swaplist,&index);
+		if (swaplist[1] == NULL){
+			if (swaplist[0]->left != NULL && swaplist[0]->data < swaplist[0]->left->data)
+				swaplist[1] = swaplist[0]->left;
+			else if (swaplist[0]->right != NULL && swaplist[0]->data > swaplist[0]->right->data)
+				swaplist[1] = swaplist[0]->right;
+			else
+				swaplist[1] = root;
+		}
+		swap_nodes(swaplist[0], swaplist[1]);
+	}
+	return;
 }
